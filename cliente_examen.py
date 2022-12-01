@@ -93,8 +93,8 @@ class Cliente():
 					MC[i*len(B[0]) + j] += A[i][k] * B[k][j]# Guarda resultado en MC[] de cada core
 
 	if __name__ == '__main__':
-		A = [[random.randint(0,1) for i in range(n_col_A)] for j in range(n_fil_A)]
-		B = [[random.randint(0,1) for i in range(n_col_B)] for j in range(n_fil_B)]
+		A = [[random.randint(0,10) for i in range(6209)] for j in range(22)] # Genero A[221301760][6]con num. aleatorios del 0 al 215, ver excel 
+		B = [[random.randint(0,10) for i in range(22)] for j in range(6209)] # Genero B[6][221301760]con num. aleatorios del 0 al 215, ver excel
 		n_fil_A = 6209 # Obtengo num de filas de A 
 		n_col_A = 22 # Obtengo num de colunmas de A 
 		n_fil_B = 22 # Obtengo num de filas de B
