@@ -4,6 +4,9 @@ import sys										#libreria para hablar con el sistema
 import pickle									#pasar a binario (serializar y desserializar)
 import os										#hablar con el sistema operativo
 
+ 
+
+
 class Servidor():
 
 	def __init__(self, host=socket.gethostname(), port=int(input("Que puerto quiere usar ? "))): #pide el host y el puerto en el que se alojará el servidor
@@ -54,17 +57,41 @@ class Servidor():
 						if data: self.broadcast(data,c)  #cuando data es verdadero se abre el broadcast
 					except: pass
 
-	def broadcast(self, msg, cliente):
-		auxiliar = 0
-		for c in self.clientes:
-			try:
-				if c != cliente:
-					if auxiliar == 0:
-						print("Clientes conectados actualmente = ", len(self.clientes))
-						self.readNick()
-						print(pickle.loads(msg))
-						auxiliar = 1
-					c.send(msg)
-			except: self.clientes.remove(c)
+	def procesarC(self):  # La función procesar se encarga de manejar los mensajes enviados
+		print("Procesamiento de mensajes iniciado")
+		print("La dirección ip del servidor es: " +
+			socket.gethostbyname(socket.gethostname()))
+		while True:  # Mientras que el programa este activo
+			if len(self.clientes) > 0:  # Si hay al menos un cliente
+				for c in self.clientes:  # Recorre la lista de clientes
+					try:  # Intenta recibir un mensaje
+						# Guarda el mensaje en la variable data
+						data = c.recv(64)
+						if data:  # Si hay data
+							self.listaNicks()  # Imprime la lista de nicknames conectados
+							matriz = pickle.loads(data) #Añado todo lo de matrices
+							print(matriz) # Imprime el mensaje
+							matrizFinal = matriz.split(',')
+							print(matrizFinal)
+							self.multiplicacionMatrices(matrizFinal[0], matrizFinal[1], matrizFinal[2], matrizFinal[3])
+							# multiplicacionMatrices()
+							# Manda el mensaje al resto de clientes, si hay
+							self.broadcast(data, c)
+					except:  # Sino recibe un mensaje pasa
+						pass
+            
+	def historial(self, n):  # La función historial se encarga de guardar el historial de mensajes de cada sesión en un txt
+                                # Manejamos un documento externo para que guarde el nick con el mensaje
+		with open("ue22166209AI1.txt", 'a') as f:
+			f.write("Historial " + str(n) + ":\n") 
+            
+        # La función listaNicks se encarga de imprimir el listado actual de nicks conectados
+	def listaNicks(self):
+		print("Lista de Nicknames:")
+		with open("u22166209nicknames.txt", 'r') as f:
+			print(f.read())
+            
+
+
 
 arrancar = Servidor() 
